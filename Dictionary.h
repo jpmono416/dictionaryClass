@@ -7,11 +7,15 @@
 
 
 #include <string>
+#include <forward_list>
 
+template <typename K, typename V>
 class Dictionary {
 public:
-    using Key = std::string;
-    using Item = std::string;
+    using Key = K;
+    using Item = V;
+
+    std::forward_list<std::pair<Key,Item>> dictList;
 
 };
 
