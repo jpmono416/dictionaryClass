@@ -5,33 +5,54 @@
 #ifndef DICTIONARYCLASS_LINKEDLIST_H
 #define DICTIONARYCLASS_LINKEDLIST_H
 
+/*
+ * Followed some references online for information about how
+ * singly linked lists internally work, no unreferenced code
+ * has been used from these webpages
+ */
 
 template<typename T>
 class LinkedList
 {
+    public:
+        struct Node
+        {
+            T element;
+            Node *nextElem;
 
-    struct Node
-    {
-        T element;
-        Node *nextElem;
-    };
+            // Override operator for pointer to return Node
+            // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
+            //TODO check to run the code without this once finished
+            Node operator*()
+            {
+                return this;
+            }
+        };
 
-    Node *firstNode, *lastNode;
+        Node *firstNode, *lastNode;
 
 
-    LinkedList()
-    {
-        firstNode = nullptr;
-        lastNode = nullptr;
-    }
-    bool insert(T);
-    bool pop_back();
-    bool remove(T*);
-    // Overloading to search and remove by value rather than pointer
-    bool remove(T);
-    // Overloading to remove a particular item by position
-    bool remove(int);
-    
+        LinkedList()
+        {
+            firstNode = nullptr;
+            lastNode = nullptr;
+        }
+
+        bool insert(T);
+        T pop_back();
+        bool remove(T*);
+        // Overloading to search and remove by value rather than pointer
+        void remove(T);
+        T* getElem(T);
+
+        // Make the class range-based iterable
+        // https://stackoverflow.com/a/31457319
+        Node* begin();
+        Node* end();
+
+        // Override ++ operator to allow iteration on the class
+        // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
+
 
 };
 
@@ -60,13 +81,29 @@ bool LinkedList<T>::insert(T value) {
 }
 
 template<typename T>
-bool LinkedList<T>::remove(T *) {
+bool LinkedList<T>::remove(T * elem) {
 
+    Node *currentElement = new Node;
+    Node *lastChecked = new Node;
+    Node *nextElement = new Node;
+    while(currentElement->nextElem != nullptr)
+    {
+        if(lastChecked = currentElement;
+        if(currentElement == elem)
+        {
+            nextElement = currentElement->nextElem;
+            delete currentElement;
+        }
+        lastChecked->nextElem = nextElement;
+        return true;
+    }
 
+    // Node not in list
+    return false;
 }
 
 template<typename T>
-bool LinkedList<T>::pop_back() {
+T LinkedList<T>::pop_back() {
 
     // Remove first element
 
@@ -75,10 +112,32 @@ bool LinkedList<T>::pop_back() {
         temp = firstNode;
 
         firstNode = firstNode->nextElem;
+        T first = temp->element;
+
         delete temp;
+        return first;
 
-        return true;
+}
 
+template<typename T>
+void LinkedList<T>::remove(T elem) {
+
+    Node *element = getElem(elem);
+    delete element;
+}
+
+template<typename T>
+T *LinkedList<T>::getElem(T elem) {
+    Node *temp = firstNode;
+    while(temp->nextElem != nullptr)
+    {
+        if(elem == temp->element)
+        {
+            return temp;
+        }
+    }
+    // Not found
+    return nullptr;
 }
 
 #endif //DICTIONARYCLASS_LINKEDLIST_H
