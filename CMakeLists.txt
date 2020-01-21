@@ -3,4 +3,4 @@ project(dictionaryClass)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(dictionaryClass main.cpp Dictionary.cpp Dictionary.h)
+add_executable(dictionaryClass main.cpp Dictionary.cpp Dictionary.h LinkedList.h)
