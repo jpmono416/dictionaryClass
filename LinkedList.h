@@ -50,30 +50,22 @@ class LinkedList
         Node* begin();
         Node* end();
 
-
         // Override ++ operator to allow iteration on the class
         // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
-
-        LinkedList& operator++()
+        Node& operator++()
         {
-            Node* temp = *currentNode->nextElem;
-            if(temp != nullptr)
+            currentNode = currentNode->nextElem;
+
+            if(currentNode == nullptr)
             {
-                *currentNode = temp;
-                return currentNode;
-            } else
-            {
-                end();
+                currentNode = begin();
+                return end();
             }
 
+            return *currentNode;
 
         }
 };
-
-template<typename T>
-typename LinkedList<T>::Node *LinkedList<T>::begin() {
-    return firstNode;
-}
 
 template<typename T>
 bool LinkedList<T>::insert(T value) {
@@ -160,8 +152,13 @@ T* LinkedList<T>::getElem(T elem) {
 }
 
 template<typename T>
+typename LinkedList<T>::Node *LinkedList<T>::begin() {
+    return firstNode;
+}
+
+template<typename T>
 typename LinkedList<T>::Node *LinkedList<T>::end() {
-    return lastNode;
+    return lastNode->nextElem;
 }
 
 #endif //DICTIONARYCLASS_LINKEDLIST_H

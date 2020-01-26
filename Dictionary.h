@@ -48,9 +48,12 @@ namespace Containers
     template<typename K, typename V>
     typename Dictionary<K, V>::Item* Dictionary<K, V>::lookup(const Key k) {
 
-        for(dictList : elem)
+        for(elem&& : dictList)
         {
+            // Implementation assumes a pair will be used
+            if(!elem.element.first == k) { continue; }
 
+            return elem.element.second;
         }
         return nullptr;
     }
