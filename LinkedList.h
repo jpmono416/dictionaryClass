@@ -22,14 +22,14 @@ class LinkedList
 
             // Override operator for pointer to return Node
             // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
-            //TODO check to run the code without this once finished
+            //TODO check running the code without this once finished
             Node operator*()
             {
                 return this;
             }
         };
 
-        Node *firstNode, *lastNode;
+        Node *firstNode, *lastNode, *currentNode;
 
 
         LinkedList()
@@ -50,11 +50,30 @@ class LinkedList
         Node* begin();
         Node* end();
 
+
         // Override ++ operator to allow iteration on the class
         // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
 
+        LinkedList& operator++()
+        {
+            Node* temp = *currentNode->nextElem;
+            if(temp != nullptr)
+            {
+                *currentNode = temp;
+                return currentNode;
+            } else
+            {
+                end();
+            }
 
+
+        }
 };
+
+template<typename T>
+typename LinkedList<T>::Node *LinkedList<T>::begin() {
+    return firstNode;
+}
 
 template<typename T>
 bool LinkedList<T>::insert(T value) {
@@ -127,7 +146,7 @@ void LinkedList<T>::remove(T elem) {
 }
 
 template<typename T>
-T *LinkedList<T>::getElem(T elem) {
+T* LinkedList<T>::getElem(T elem) {
     Node *temp = firstNode;
     while(temp->nextElem != nullptr)
     {
@@ -138,6 +157,11 @@ T *LinkedList<T>::getElem(T elem) {
     }
     // Not found
     return nullptr;
+}
+
+template<typename T>
+typename LinkedList<T>::Node *LinkedList<T>::end() {
+    return lastNode;
 }
 
 #endif //DICTIONARYCLASS_LINKEDLIST_H
