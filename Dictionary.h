@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <iostream>
 #include "LinkedList.h"
 
 namespace Containers
@@ -36,7 +37,7 @@ namespace Containers
             dictList.insert(newElem);
             // TODO DELETE
             std::cout << "Insert successful" << std::endl;
-        } catch
+        } catch()
         {
             // TODO DELETE
             std::cout << "Could not insert into list" << std::endl;
@@ -48,15 +49,33 @@ namespace Containers
     template<typename K, typename V>
     typename Dictionary<K, V>::Item* Dictionary<K, V>::lookup(const Key k) {
 
-        for(elem&& : dictList)
+        for(std::pair<K,V> &&elem : dictList)
         {
             // Implementation assumes a pair will be used
-            if(!elem.element.first == k) { continue; }
+            if(elem.first != k) { continue; }
 
-            return elem.element.second;
+            return elem.second;
         }
+        // Not found
         return nullptr;
     }
+
+    template<typename K, typename V>
+    bool Dictionary<K, V>::remove(Key k) {
+
+        std::pair<K,V>* elem;
+        elem = lookup(k);
+
+        if(elem == nullptr)
+        {
+            return false;
+        }
+
+        delete elem;
+        return true;
+    }
+
+
 }
 
 #endif //DICTIONARYCLASS_DICTIONARY_H
