@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include "LinkedList.h"
+#include <functional>
 
 namespace Containers
 {
@@ -17,6 +18,7 @@ namespace Containers
         public:
             using Key = K;
             using Item = V;
+            using Pair = std::pair<Key, Item>;
 
             LinkedList<std::pair<Key,Item>> dictList;
 
@@ -24,58 +26,68 @@ namespace Containers
             bool insert(Key, Item);
             Item* lookup(Key);
             bool remove(Key);
+            bool removeIf(const std::function<bool(std::pair<Key,Item>)>&);
     };
 
     template<typename K, typename V>
-    bool Dictionary<K, V>::insert(Key k, Item i) {
-        std::pair<Key, Item> newElem;
-        try
-        {
-            newElem.first = k;
-            newElem.second = i;
+    Dictionary<K, V>::Dictionary() {}
 
-            dictList.insert(newElem);
-            // TODO DELETE
-            std::cout << "Insert successful" << std::endl;
-        } catch()
-        {
-            // TODO DELETE
-            std::cout << "Could not insert into list" << std::endl;
-            return false;
-        }
+    template<typename K, typename V>
+    bool Dictionary<K, V>::insert(Key k, Item i) {
+        std::pair<Key, Item> newElem = {k,i};
+        dictList.insert(newElem);
         return true;
     }
 
-    template<typename K, typename V>
-    typename Dictionary<K, V>::Item* Dictionary<K, V>::lookup(const Key k) {
+    template<typename Key, typename Item>
+    typename Dictionary<Key, Item>::Item* Dictionary<Key, Item>::lookup(const Key k) {
 
-        for(std::pair<K,V> &&elem : dictList)
+
+        for(typename LinkedList<Pair>::Iterator iterator = dictList.begin(); iterator != dictList.end(); iterator++)
         {
-            // Implementation assumes a pair will be used
-            if(elem.first != k) { continue; }
 
-            return elem.second;
+
+            if(iterator.currentNode->element.first != k) { continue; }
+
+            return &iterator.currentNode->element.second;
         }
         // Not found
         return nullptr;
     }
 
-    template<typename K, typename V>
-    bool Dictionary<K, V>::remove(Key k) {
 
-        std::pair<K,V>* elem;
-        elem = lookup(k);
 
-        if(elem == nullptr)
-        {
-            return false;
-        }
-
-        delete elem;
-        return true;
+    template<typename Key, typename Item>
+    bool Dictionary<Key, Item>::remove(Key k)
+    {
+        // Function that finds element
+        return removeIf([k](std::pair<Key, Item> element){
+            return element.first == k;
+        });
     }
 
+    template<typename K, typename V>
+    bool Dictionary<K, V>::removeIf(const std::function<bool(Pair)> &funct) {
 
+        bool hasRemoved = false;
+        for(typename LinkedList<Pair>::Iterator iterator = dictList.begin();
+        iterator != dictList.end(); iterator++)
+        {
+            if(funct(iterator.currentNode->element))
+            {
+                dictList.remove(iterator.currentNode->element);
+                hasRemoved = true;
+            }
+        }
+
+        /*
+        for(std::pair<Key,Item> &elem : dictList)
+        {
+
+        }*/
+
+        return hasRemoved;
+    }
 }
 
 #endif //DICTIONARYCLASS_DICTIONARY_H

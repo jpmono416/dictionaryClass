@@ -15,56 +15,84 @@ template<typename T>
 class LinkedList
 {
     public:
+        class Iterator;
+        Iterator begin()
+        {
+            return Iterator(firstNode);
+        }
+
+        Iterator end()
+        {
+            return Iterator(nullptr);
+        }
         struct Node
         {
             T element;
             Node *nextElem;
 
-            // Override operator for pointer to return Node
-            // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
-            //TODO check running the code without this once finished
-            Node operator*()
+            bool operator==(const Node *elem)
             {
-                return this;
+                return(elem->element == this->element);
             }
         };
 
-        Node *firstNode, *lastNode, *currentNode;
 
 
-        LinkedList()
+        // Got this idea for the iterator for the loop to work for this custom class
+        // https://www.geeksforgeeks.org/implementing-iterator-pattern-of-a-single-linked-list/
+        // Copied most of the code because the rest of the implementation was almost completed
+        // but custom iterator didn't work
+        class Iterator
         {
-            firstNode = nullptr;
-            lastNode = nullptr;
-        }
+            public:
+                /*Iterator() noexcept :
+                        currentNode (firstNode) { }*/
+
+                explicit Iterator(Node* node) noexcept :
+                        currentNode (node) { }
+
+                // Prefix ++ overload
+                Iterator& operator++()
+                {
+                    if (currentNode)
+                        currentNode = currentNode->nextElem;
+                    return *this;
+                }
+
+                // Postfix ++ overload
+                Iterator operator++(int)
+                {
+                    Iterator iterator = *this;
+                    ++*this;
+                    return iterator;
+                }
+
+                bool operator!=(const Iterator& iterator)
+                {
+                    return currentNode != iterator.currentNode;
+                }
+
+                int operator*()
+                {
+                    return currentNode->element;
+                }
+                Node *currentNode;
+            private:
+
+
+        };
+
+
+        LinkedList() : firstNode{nullptr}, lastNode{nullptr}{}
 
         bool insert(T);
         T pop_back();
-        bool remove(T*);
-        // Overloading to search and remove by value rather than pointer
-        void remove(T);
-        T* getElem(T);
+        bool remove(T);
 
-        // Make the class range-based iterable
-        // https://stackoverflow.com/a/31457319
-        Node* begin();
-        Node* end();
+        Node *firstNode, *lastNode;
+    private:
+        Node * getElem(T);
 
-        // Override ++ operator to allow iteration on the class
-        // https://www.artificialworlds.net/blog/2017/05/11/c-iterator-example-and-an-iterable-range/
-        Node& operator++()
-        {
-            currentNode = currentNode->nextElem;
-
-            if(currentNode == nullptr)
-            {
-                currentNode = begin();
-                return end();
-            }
-
-            return *currentNode;
-
-        }
 };
 
 template<typename T>
@@ -73,7 +101,7 @@ bool LinkedList<T>::insert(T value) {
 
     Node *temp = new Node;
     temp->element = value;
-    temp->next = nullptr;
+    temp->nextElem = nullptr;
 
     if(firstNode == nullptr)
     {
@@ -88,19 +116,18 @@ bool LinkedList<T>::insert(T value) {
         lastNode = temp;
     }
 
-    return false;
+    return true;
 }
 
 template<typename T>
-bool LinkedList<T>::remove(T * elem) {
+bool LinkedList<T>::remove(T elem) {
 
     Node *currentElement = new Node;
     Node *lastChecked = new Node;
     Node *nextElement = new Node;
     while(currentElement->nextElem != nullptr)
     {
-        if(lastChecked = currentElement;
-        if(currentElement == elem)
+        if(currentElement->element == elem)
         {
             nextElement = currentElement->nextElem;
             delete currentElement;
@@ -117,28 +144,18 @@ template<typename T>
 T LinkedList<T>::pop_back() {
 
     // Remove first element
+    Node *temp = firstNode;
 
+    firstNode = firstNode->nextElem;
+    T first = temp->element;
 
-        Node *temp = new Node;
-        temp = firstNode;
-
-        firstNode = firstNode->nextElem;
-        T first = temp->element;
-
-        delete temp;
-        return first;
+    delete temp;
+    return first;
 
 }
 
 template<typename T>
-void LinkedList<T>::remove(T elem) {
-
-    Node *element = getElem(elem);
-    delete element;
-}
-
-template<typename T>
-T* LinkedList<T>::getElem(T elem) {
+typename LinkedList<T>::Node *LinkedList<T>::getElem(T elem) {
     Node *temp = firstNode;
     while(temp->nextElem != nullptr)
     {
@@ -149,16 +166,7 @@ T* LinkedList<T>::getElem(T elem) {
     }
     // Not found
     return nullptr;
-}
 
-template<typename T>
-typename LinkedList<T>::Node *LinkedList<T>::begin() {
-    return firstNode;
-}
-
-template<typename T>
-typename LinkedList<T>::Node *LinkedList<T>::end() {
-    return lastNode->nextElem;
 }
 
 #endif //DICTIONARYCLASS_LINKEDLIST_H
