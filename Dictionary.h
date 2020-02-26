@@ -22,15 +22,11 @@ namespace Containers
 
             LinkedList<std::pair<Key,Item>> dictList;
 
-            Dictionary();
             bool insert(Key, Item);
             Item* lookup(Key);
             bool remove(Key);
             bool removeIf(const std::function<bool(std::pair<Key,Item>)>&);
     };
-
-    template<typename K, typename V>
-    Dictionary<K, V>::Dictionary() {}
 
     template<typename K, typename V>
     bool Dictionary<K, V>::insert(Key k, Item i) {
@@ -42,11 +38,8 @@ namespace Containers
     template<typename Key, typename Item>
     typename Dictionary<Key, Item>::Item* Dictionary<Key, Item>::lookup(const Key k) {
 
-
         for(typename LinkedList<Pair>::Iterator iterator = dictList.begin(); iterator != dictList.end(); iterator++)
         {
-
-
             if(iterator.currentNode->element.first != k) { continue; }
 
             return &iterator.currentNode->element.second;
@@ -79,12 +72,6 @@ namespace Containers
                 hasRemoved = true;
             }
         }
-
-        /*
-        for(std::pair<Key,Item> &elem : dictList)
-        {
-
-        }*/
 
         return hasRemoved;
     }

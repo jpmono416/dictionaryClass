@@ -5,6 +5,8 @@
 #ifndef DICTIONARYCLASS_LINKEDLIST_H
 #define DICTIONARYCLASS_LINKEDLIST_H
 
+#include "list"
+#include <utility>
 /*
  * Followed some references online for information about how
  * singly linked lists internally work, no unreferenced code
@@ -23,6 +25,7 @@ class LinkedList
 
         Iterator end()
         {
+            std::list<int> s;
             return Iterator(nullptr);
         }
         struct Node
@@ -77,17 +80,16 @@ class LinkedList
                     return currentNode->element;
                 }
                 Node *currentNode;
-            private:
-
-
         };
 
 
         LinkedList() : firstNode{nullptr}, lastNode{nullptr}{}
 
         bool insert(T);
+        bool insertBack(T);
         T pop_back();
         bool remove(T);
+        int size();
 
         Node *firstNode, *lastNode;
     private:
@@ -120,20 +122,58 @@ bool LinkedList<T>::insert(T value) {
 }
 
 template<typename T>
+bool LinkedList<T>::insertBack(T) {
+    Node *temp = firstNode;
+    Node *lastChecked = firstNode;
+
+    while(temp != )
+    if(temp != nullptr)
+    {
+        //Empty list, hence the new node is first and last
+        firstNode = temp;
+        lastNode = temp;
+        temp = nullptr;
+    } else
+    {
+        temp->nextElem = firstNode;
+        firstNode = temp;
+    }
+    return true;
+}
+
+template<typename T>
 bool LinkedList<T>::remove(T elem) {
 
-    Node *currentElement = new Node;
-    Node *lastChecked = new Node;
-    Node *nextElement = new Node;
-    while(currentElement->nextElem != nullptr)
+    Node *currentElement = firstNode;
+    Node *lastChecked = firstNode;
+    Node *nextElement;
+    while(currentElement != nullptr)
     {
+        nextElement = currentElement->nextElem;
+
         if(currentElement->element == elem)
         {
-            nextElement = currentElement->nextElem;
+            lastChecked->nextElem = nextElement;
+
+            if(currentElement == firstNode)
+            {
+                firstNode = nextElement;
+            }
+
+            if(nextElement == nullptr)
+            {
+                lastNode = lastChecked;
+            }
+
+            currentElement = nullptr;
             delete currentElement;
+
+            return true;
         }
-        lastChecked->nextElem = nextElement;
-        return true;
+
+        lastChecked = currentElement;
+        currentElement = nextElement;
+
     }
 
     // Node not in list
@@ -167,6 +207,20 @@ typename LinkedList<T>::Node *LinkedList<T>::getElem(T elem) {
     // Not found
     return nullptr;
 
+}
+
+template<typename T>
+int LinkedList<T>::size() {
+
+    // Iterate over the list and count the objects
+    int size = 0;
+    Node *currentNode = firstNode;
+    while(currentNode != nullptr)
+    {
+        ++size;
+        currentNode = currentNode->nextElem;
+    }
+    return size;
 }
 
 #endif //DICTIONARYCLASS_LINKEDLIST_H
