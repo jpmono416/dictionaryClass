@@ -5,7 +5,7 @@
 #ifndef DICTIONARYCLASS_BASKETOFNAMESALGORITHM_H
 #define DICTIONARYCLASS_BASKETOFNAMESALGORITHM_H
 
-#import <string>
+#include <string>
 #include <list>
 #include <map>
 #include "LinkedList.h"
@@ -14,17 +14,23 @@
 class BasketOfNamesAlgorithm {
 
     private:
-        std::map<int, std::string> mainMap;
-        LinkedList<std::string> mainList;
+        std::map<int, std::pair<std::string, std::string>> mainMap;
+        std::list<std::string> mainList;
+
+        bool checkIfExists(std::string name);
+        std::string findNameByNextName(std::string);
+        std::string findNameByPreviousName(std::string);
+
+
 
     public:
         void executeAlgorithm();
+        const std::list<std::string> &getMainList() const;
+        void setMainList1(const std::list<std::string> &mainList);
 
         //Getters and setters
-        std::map<int, std::string> getMainMap();
-        void setMainMap(const std::map<int,std::string>&);
-        LinkedList<std::string> getMainList();
-        void setMainList(LinkedList<std::string>);
+        std::map<int, std::pair<std::string, std::string>> getMainMap();
+        void setMainMap(const std::map<int,std::pair<std::string, std::string>>&);
 
 };
 

@@ -126,7 +126,6 @@ bool LinkedList<T>::insertBack(T) {
     Node *temp = firstNode;
     Node *lastChecked = firstNode;
 
-    while(temp != )
     if(temp != nullptr)
     {
         //Empty list, hence the new node is first and last
